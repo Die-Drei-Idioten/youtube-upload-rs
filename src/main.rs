@@ -1,85 +1,25 @@
-use clap::{Arg, Command};
+use chrono::{DateTime, Utc};
+use clap::Parser;
+use tokio;
 use youtube::{create_default_metadata, load_oauth_config, load_video_metadata, YouTubeUploader};
 use youtube_scheduler::*;
-use tokio;
-use chrono::{DateTime, Utc};
 
-
-mod youtube;
 #[cfg(test)]
 mod test;
-
-
+mod youtube;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let matches = Command::new("youtube-scheduler")
-        .version("1.0")
-        .author("LinlyBoi")
-        .about("Upload and schedule YouTube videos")
-        .arg(
-            Arg::new("videos")
-                .short('v')
-                .long("videos")
-                .value_name("VIDEO_FILES")
-                .help("Comma-separated list of video file paths")
-                .required(true),
-        )
-        .arg(
-            Arg::new("interval")
-                .short('i')
-                .long("interval")
-                .value_name("DURATION")
-                .help("Time interval between uploads (e.g., 2h, 30m, 1d)")
-                .required(true),
-        )
-        .arg(
-            Arg::new("oauth-config")
-                .short('c')
-                .long("oauth-config")
-                .value_name("CONFIG_FILE")
-                .help("OAuth configuration file (JSON)")
-                .default_value("~/.client_secrets.json"),
-        )
-        .arg(
-            Arg::new("metadata")
-                .short('m')
-                .long("metadata")
-                .value_name("METADATA_FILE")
-                .help("JSON file containing video metadata"),
-        )
-        .arg(
-            Arg::new("start-time")
-                .short('s')
-                .long("start-time")
-                .value_name("START_TIME")
-                .help("Start time for first upload (ISO 8601 format)"),
-        )
-        .arg(
-            Arg::new("timestamp-file")
-                .long("timestamp-file")
-                .value_name("FILE")
-                .help("File containing unix timestamp for start time"),
-        )
-        .arg(
-            Arg::new("dry-run")
-                .long("dry-run")
-                .help("Show schedule without uploading")
-                .action(clap::ArgAction::SetTrue),
-        )
-        .get_matches();
-
-    let video_files: Vec<String> = matches
-        .get_one::<String>("videos")
-        .unwrap()
+    let args = Args::parse();
+    let video_files: Vec<String> = args.videos()
         .split(',')
         .map(|s| s.trim().to_string())
         .collect();
 
-    let interval_str = matches.get_one::<String>("interval").unwrap();
+    let interval_str = args.interval();
     let interval = parse_duration(interval_str)?;
 
-    let oauth_config_path = matches.get_one::<String>("oauth-config").unwrap();
+    let oauth_config_path = args.oauth_config();
     let oauth_config = load_oauth_config(oauth_config_path)?;
 
     let start_time = if let Some(start_str) = matches.get_one::<String>("start-time") {
@@ -169,4 +109,3 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("\nUpload process completed!");
     Ok(())
 }
-//For the random descriptions LOL
