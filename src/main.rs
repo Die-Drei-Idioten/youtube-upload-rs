@@ -54,6 +54,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             metadata[i].privacy_status = "private".to_string(); // Set to private for scheduling
         }
     }
+
+    //Display schedule
+    println!("Upload Schedule:");
+    println!("================");
     print_schedule(&video_files, &schedule);
 
     if dry_run {
