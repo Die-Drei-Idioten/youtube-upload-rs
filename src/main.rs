@@ -1,6 +1,5 @@
 use chrono::{DateTime, Utc};
 use clap::Parser;
-use tokio;
 use youtube::{create_default_metadata, load_oauth_config, load_video_metadata, YouTubeUploader};
 use youtube_scheduler::*;
 

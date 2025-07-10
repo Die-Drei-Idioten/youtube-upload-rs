@@ -257,11 +257,10 @@ impl YouTubeUploader {
 }
 
 pub fn create_default_metadata(video_files: &[String], description_file: &str) -> Vec<VideoMetadata> {
-    let expanded_path = expand_tilde(&description_file);
+    let expanded_path = expand_tilde(description_file);
     video_files
         .iter()
-        .enumerate()
-        .map(|(_i, file_path)| {
+        .map(|file_path| {
             let filename = Path::new(file_path)
                 .file_stem()
                 .unwrap_or_default()
@@ -269,7 +268,7 @@ pub fn create_default_metadata(video_files: &[String], description_file: &str) -
                 .to_string();
 
             VideoMetadata {
-                title: format!("{}", filename),
+                title: filename.to_string(),
                 description: get_random_line(&expanded_path).unwrap_or_default(),
                 tags: vec!["gaming".to_string()],
                 category_id: "20".to_string(), // GAMING
