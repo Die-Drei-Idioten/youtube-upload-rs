@@ -15,7 +15,7 @@ pub struct Args {
         help = "Comma-separated list of video file paths",
         required = true
     )]
-    pub videos: String,
+    videos: String,
 
     #[arg(
         short = 'i',
@@ -24,7 +24,7 @@ pub struct Args {
         help = "Time interval between uploads (e.g., 2h, 30m, 1d)",
         required = true
     )]
-    pub interval: String,
+    interval: String,
 
     #[arg(
         short = 'c',
@@ -34,7 +34,7 @@ pub struct Args {
         default_value = "~/.client_secrets.json",
         required = true
     )]
-    pub oauth_config: String,
+    oauth_config: String,
 
     #[arg(
         short = 'm',
@@ -42,7 +42,7 @@ pub struct Args {
         value_name = "METADATA_FILE",
         help = "JSON file containing video metadata"
     )]
-    pub metadata: Option<String>,
+    metadata: Option<String>,
 
     #[arg(
         short = 's',
@@ -50,24 +50,50 @@ pub struct Args {
         value_name = "START_TIME",
         help = "Start time for first upload (ISO 8601 format)"
     )]
-    pub start_time: Option<String>,
+    start_time: Option<String>,
 
     #[arg(
         long = "timestamp-file",
         value_name = "FILE",
         help = "File containing unix timestamp for start time"
     )]
-    pub timestamp_file: Option<String>,
+    timestamp_file: Option<String>,
 
     #[arg(
     long = "dry-run",
     help = "Show schedule without uploading",
     action = clap::ArgAction::SetTrue
 )]
-    pub dry_run: bool,
+    dry_run: bool,
 }
 
-pub fn parse_duration(duration_str: &str) -> Result<Duration, Box<dyn std::error::Error>> {
+impl Args {
+    pub fn timestamp_file(&self) -> Option<&String> {
+        self.timestamp_file.as_ref()
+    }
+
+    pub fn videos(&self) -> &str {
+        &self.videos
+    }
+
+    pub fn interval(&self) -> &str {
+        &self.interval
+    }
+
+    pub fn dry_run(&self) -> bool {
+        self.dry_run
+    }
+
+    pub fn start_time(&self) -> Option<&String> {
+        self.start_time.as_ref()
+    }
+
+    pub fn oauth_config(&self) -> &str {
+        &self.oauth_config
+    }
+}
+
+        pub fn parse_duration(duration_str: &str) -> Result<Duration, Box<dyn std::error::Error>> {
     let duration_str = duration_str.to_lowercase();
 
     if duration_str.ends_with("h") {
