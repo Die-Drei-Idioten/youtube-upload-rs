@@ -1,9 +1,71 @@
 use chrono::{DateTime, Duration, Utc};
+use clap::{command, Parser};
 use std::fs::{self};
 
+#[derive(Parser, Debug)]
+#[command(author= "LinlyBoi",
+          version = "0.9",
+          about = "Upload and schedule YouTube videos",
+          long_about = None)]
+pub struct Args {
+    #[arg(
+        short = 'v',
+        long,
+        value_name = "VIDEO_FILES",
+        help = "Comma-separated list of video file paths",
+        required = true
+    )]
+    pub videos: String,
 
+    #[arg(
+        short = 'i',
+        long,
+        value_name = "DURATION",
+        help = "Time interval between uploads (e.g., 2h, 30m, 1d)",
+        required = true
+    )]
+    pub interval: String,
 
+    #[arg(
+        short = 'c',
+        long = "oauth-config",
+        value_name = "CONFIG_FILE",
+        help = "OAuth configuration file (JSON)",
+        default_value = "~/.client_secrets.json",
+        required = true
+    )]
+    pub oauth_config: String,
 
+    #[arg(
+        short = 'm',
+        long = "metadata",
+        value_name = "METADATA_FILE",
+        help = "JSON file containing video metadata"
+    )]
+    pub metadata: Option<String>,
+
+    #[arg(
+        short = 's',
+        long = "start-time",
+        value_name = "START_TIME",
+        help = "Start time for first upload (ISO 8601 format)"
+    )]
+    pub start_time: Option<String>,
+
+    #[arg(
+        long = "timestamp-file",
+        value_name = "FILE",
+        help = "File containing unix timestamp for start time"
+    )]
+    pub timestamp_file: Option<String>,
+
+    #[arg(
+    long = "dry-run",
+    help = "Show schedule without uploading",
+    action = clap::ArgAction::SetTrue
+)]
+    pub dry_run: bool,
+}
 
 pub fn parse_duration(duration_str: &str) -> Result<Duration, Box<dyn std::error::Error>> {
     let duration_str = duration_str.to_lowercase();
