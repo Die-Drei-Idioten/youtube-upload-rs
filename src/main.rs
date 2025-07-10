@@ -33,7 +33,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let dry_run = args.dry_run();
 
     // Load or create metadata
-    let mut metadata = if let Some(metadata_path) = args.timestamp_file() {
+    let mut metadata = if let Some(metadata_path) = args.metadata() {
         load_video_metadata(metadata_path)?
     } else {
         create_default_metadata(&video_files, args.description_file())
