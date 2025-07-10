@@ -270,7 +270,7 @@ pub fn create_default_metadata(video_files: &[String], description_file: String)
 
             VideoMetadata {
                 title: format!("{}", filename),
-                description: get_random_line(&expanded_path).unwrap(),
+                description: get_random_line(&expanded_path).unwrap_or_default(),
                 tags: vec!["gaming".to_string()],
                 category_id: "20".to_string(), // GAMING
                 privacy_status: "private".to_string(),

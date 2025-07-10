@@ -36,7 +36,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut metadata = if let Some(metadata_path) = args.timestamp_file() {
         load_video_metadata(metadata_path)?
     } else {
-        create_default_metadata(&video_files)
+        create_default_metadata(&video_files, args.description_file())
     };
 
     // Generate schedule
