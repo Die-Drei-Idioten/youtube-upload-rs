@@ -93,7 +93,7 @@ impl Args {
     }
 }
 
-        pub fn parse_duration(duration_str: &str) -> Result<Duration, Box<dyn std::error::Error>> {
+pub fn parse_duration(duration_str: &str) -> Result<Duration, Box<dyn std::error::Error>> {
     let duration_str = duration_str.to_lowercase();
 
     if duration_str.ends_with("h") {
