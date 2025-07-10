@@ -1,3 +1,5 @@
+use chrono::Duration;
+
 use super::*;
 
 #[test]
