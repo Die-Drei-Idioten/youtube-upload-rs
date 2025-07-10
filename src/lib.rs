@@ -65,6 +65,14 @@ pub struct Args {
     action = clap::ArgAction::SetTrue
 )]
     dry_run: bool,
+
+    #[arg(
+        long = "description-file",
+        value_name = "DESCRIPTION_FILE",
+        help = "File random description to assign videos (For fun), not used if video has metadata",
+        default_value = "~/org/quotes.org"
+    )]
+    description_file: String
 }
 
 impl Args {
@@ -90,6 +98,13 @@ impl Args {
 
     pub fn oauth_config(&self) -> &str {
         &self.oauth_config
+    }
+    pub fn metadata(&self) -> Option<&String> {
+        self.metadata.as_ref()
+    }
+
+    pub fn description_file(&self) -> &str {
+        &self.description_file
     }
 }
 

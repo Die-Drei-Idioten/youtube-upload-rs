@@ -256,7 +256,8 @@ impl YouTubeUploader {
     }
 }
 
-pub fn create_default_metadata(video_files: &[String]) -> Vec<VideoMetadata> {
+pub fn create_default_metadata(video_files: &[String], description_file: String) -> Vec<VideoMetadata> {
+    let expanded_path = expand_tilde(&description_file);
     video_files
         .iter()
         .enumerate()
@@ -269,7 +270,7 @@ pub fn create_default_metadata(video_files: &[String]) -> Vec<VideoMetadata> {
 
             VideoMetadata {
                 title: format!("{}", filename),
-                description: get_random_line("/home/linly/org/quotes.org").expect("WHAT DA HAIL"),
+                description: get_random_line(&expanded_path).unwrap(),
                 tags: vec!["gaming".to_string()],
                 category_id: "20".to_string(), // GAMING
                 privacy_status: "private".to_string(),
@@ -278,8 +279,9 @@ pub fn create_default_metadata(video_files: &[String]) -> Vec<VideoMetadata> {
         })
         .collect()
 }
-fn get_random_line<P: AsRef<Path>>(path: P) -> io::Result<String> {
-    let file = File::open(path)?;
+fn get_random_line(path: &str) -> io::Result<String> {
+    let expanded_path = expand_tilde(path);
+    let file = File::open(expanded_path)?;
     let reader = BufReader::new(file);
     let lines: Vec<String> = reader.lines().collect::<io::Result<Vec<String>>>()?;
 
