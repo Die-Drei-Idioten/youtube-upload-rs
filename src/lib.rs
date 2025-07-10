@@ -158,3 +158,17 @@ pub fn expand_tilde(path: &str) -> String {
         path.to_string()
     }
 }
+
+pub fn print_schedule(video_files: &Vec<String>, schedule: &Vec<DateTime<Utc>>) {
+    // Display schedule
+    println!("Upload Schedule:");
+    println!("================");
+    for (i, (video_file, scheduled_time)) in video_files.iter().zip(schedule.iter()).enumerate() {
+        println!(
+            "{}. {} -> {}",
+            i + 1,
+            video_file,
+            scheduled_time.format("%Y-%m-%d %H:%M:%S UTC")
+        );
+    }
+}

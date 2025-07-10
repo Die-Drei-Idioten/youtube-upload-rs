@@ -22,18 +22,18 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let oauth_config_path = args.oauth_config();
     let oauth_config = load_oauth_config(oauth_config_path)?;
 
-    let start_time = if let Some(start_str) = matches.get_one::<String>("start-time") {
+    let start_time = if let Some(start_str) = args.start_time() {
         Some(DateTime::parse_from_rfc3339(start_str)?.with_timezone(&Utc))
     } else {
         None
     };
 
-    let timestamp_file = matches.get_one::<String>("timestamp-file");
+    let timestamp_file = args.timestamp_file();
 
-    let dry_run = matches.get_flag("dry-run");
+    let dry_run = args.dry_run();
 
     // Load or create metadata
-    let mut metadata = if let Some(metadata_path) = matches.get_one::<String>("metadata") {
+    let mut metadata = if let Some(metadata_path) = args.timestamp_file() {
         load_video_metadata(metadata_path)?
     } else {
         create_default_metadata(&video_files)
@@ -54,18 +54,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             metadata[i].privacy_status = "private".to_string(); // Set to private for scheduling
         }
     }
-
-    // Display schedule
-    println!("Upload Schedule:");
-    println!("================");
-    for (i, (video_file, scheduled_time)) in video_files.iter().zip(schedule.iter()).enumerate() {
-        println!(
-            "{}. {} -> {}",
-            i + 1,
-            video_file,
-            scheduled_time.format("%Y-%m-%d %H:%M:%S UTC")
-        );
-    }
+    print_schedule(&video_files, &schedule);
 
     if dry_run {
         println!("\nDry run complete. No videos were uploaded.");
