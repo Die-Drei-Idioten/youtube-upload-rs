@@ -11,7 +11,8 @@ mod youtube;
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args = Args::parse();
-    let video_files: Vec<String> = args.videos()
+    let video_files: Vec<String> = args
+        .videos()
         .split(',')
         .map(|s| s.trim().to_string())
         .collect();
@@ -29,7 +30,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     };
 
     let timestamp_file = args.timestamp_file();
-
     let dry_run = args.dry_run();
 
     // Load or create metadata

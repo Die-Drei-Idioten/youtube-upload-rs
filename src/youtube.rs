@@ -1,3 +1,4 @@
+use chrono::{DateTime, Duration, Utc};
 use oauth2::basic::BasicClient;
 use oauth2::reqwest::async_http_client;
 use oauth2::{
@@ -6,12 +7,11 @@ use oauth2::{
 };
 use rand::seq::SliceRandom;
 use reqwest::Client;
-use serde_json::json;
-use std::path::Path;
-use chrono::{DateTime, Duration, Utc};
-use std::fs::{self, File};
 use serde::{Deserialize, Serialize};
+use serde_json::json;
+use std::fs::{self, File};
 use std::io::{self, BufRead, BufReader};
+use std::path::Path;
 use youtube_scheduler::expand_tilde;
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -37,7 +37,6 @@ struct StoredTokens {
     refresh_token: Option<String>,
     expires_at: Option<DateTime<Utc>>,
 }
-
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct UploadResponse {
@@ -256,7 +255,6 @@ impl YouTubeUploader {
         }
     }
 }
-
 
 pub fn create_default_metadata(video_files: &[String]) -> Vec<VideoMetadata> {
     video_files
