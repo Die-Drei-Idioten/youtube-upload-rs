@@ -1,20 +1,8 @@
 use clap::{Arg, Command};
-use oauth2::basic::BasicClient;
-use oauth2::reqwest::async_http_client;
-use oauth2::{
-    AuthUrl, AuthorizationCode, ClientId, ClientSecret, CsrfToken, PkceCodeChallenge, RedirectUrl,
-    Scope, TokenResponse, TokenUrl,
-};
-use reqwest::Client;
-use serde_json::json;
 use youtube::{create_default_metadata, load_oauth_config, load_video_metadata, YouTubeUploader};
 use youtube_scheduler::*;
-use std::path::Path;
 use tokio;
-use chrono::{DateTime, Duration, Utc};
-use std::fs::{self, File};
-use serde::{Deserialize, Serialize};
-use std::io::{self};
+use chrono::{DateTime, Utc};
 
 
 mod youtube;

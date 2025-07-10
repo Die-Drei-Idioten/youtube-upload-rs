@@ -1,4 +1,3 @@
-use clap::{Arg, Command};
 use oauth2::basic::BasicClient;
 use oauth2::reqwest::async_http_client;
 use oauth2::{
@@ -8,9 +7,7 @@ use oauth2::{
 use rand::seq::SliceRandom;
 use reqwest::Client;
 use serde_json::json;
-use youtube_scheduler::*;
 use std::path::Path;
-use tokio;
 use chrono::{DateTime, Duration, Utc};
 use std::fs::{self, File};
 use serde::{Deserialize, Serialize};
