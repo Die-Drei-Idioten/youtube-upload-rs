@@ -1,7 +1,12 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'rust:1.75'  // Use official Rust Docker image
+            args '-v $HOME/.cargo:/root/.cargo'  // Cache Cargo dependencies
+        }
+    }
 
-  triggers {
+    triggers {
         // Trigger build on SCM changes (pushes)
         pollSCM('H/5 * * * *')  // Poll SCM every 5 minutes
     }
@@ -10,7 +15,6 @@ pipeline {
         // Rust environment variables
         CARGO_HOME = '/root/.cargo'
         RUSTUP_HOME = '/root/.rustup'
-        PATH = "${env.PATH}:/root/.cargo/bin"
         // Optional: Set specific Rust version
         // RUST_VERSION = '1.75.0'
     }
@@ -23,66 +27,46 @@ pipeline {
             }
         }
 
-        stage('Setup Rust') {
-            steps {
-                script {
-                    // Check if rustup is installed, install if not
-                    def rustupExists = sh(script: 'test -f /root/.cargo/bin/rustup', returnStatus: true) == 0
-                    if (!rustupExists) {
-                        echo 'Installing rustup...'
-                        sh 'curl --proto "=https" --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y'
-                    }
-
-                    // Update rustup and install stable toolchain
-                    sh '/root/.cargo/bin/rustup update stable'
-                    sh '/root/.cargo/bin/rustup default stable'
-
-                    // Install additional components
-                    sh '/root/.cargo/bin/rustup component add clippy rustfmt'
-                }
-            }
-        }
-
         stage('Rust Info') {
             steps {
                 // Display Rust and Cargo versions
-                sh '/root/.cargo/bin/rustc --version'
-                sh '/root/.cargo/bin/cargo --version'
+                sh 'rustc --version'
+                sh 'cargo --version'
             }
         }
 
         stage('Cache Dependencies') {
             steps {
                 // Update Cargo index and cache dependencies
-                sh '/root/.cargo/bin/cargo fetch'
+                sh 'cargo fetch'
             }
         }
 
         stage('Lint') {
             steps {
                 // Run clippy for linting
-                sh '/root/.cargo/bin/cargo clippy -- -D warnings'
+                sh 'cargo clippy -- -D warnings'
             }
         }
 
         stage('Format Check') {
             steps {
                 // Check code formatting
-                sh '/root/.cargo/bin/cargo fmt -- --check'
+                sh 'cargo fmt -- --check'
             }
         }
 
         stage('Build') {
             steps {
                 // Build the project
-                sh '/root/.cargo/bin/cargo build --release'
+                sh 'cargo build --release'
             }
         }
 
         stage('Test') {
             steps {
                 // Run tests
-                sh '/root/.cargo/bin/cargo test --release'
+                sh 'cargo test --release'
             }
         }
 
@@ -91,8 +75,8 @@ pipeline {
                 // Optional: Run security audit
                 script {
                     try {
-                        sh '/root/.cargo/bin/cargo install cargo-audit || true'
-                        sh '/root/.cargo/bin/cargo audit'
+                        sh 'cargo install cargo-audit || true'
+                        sh 'cargo audit'
                     } catch (Exception e) {
                         echo "Security audit failed or not available: ${e.getMessage()}"
                     }
