@@ -52,9 +52,6 @@ pipeline {
     }
 
     post {
-        always {
-            cleanWs()
-        }
         success {
             echo 'Rust build completed successfully!'
         }
