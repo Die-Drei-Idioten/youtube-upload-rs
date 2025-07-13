@@ -1,6 +1,6 @@
 pipeline {
     agent {
-        docker {
+        dockerContainer {
             image 'rust:1.75'  // Use official Rust Docker image
             args '-v $HOME/.cargo:/root/.cargo'  // Cache Cargo dependencies
         }
