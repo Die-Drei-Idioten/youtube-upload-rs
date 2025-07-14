@@ -32,7 +32,7 @@ pub struct Args {
         value_name = "CONFIG_FILE",
         help = "OAuth configuration file (JSON)",
         default_value = "~/.client_secrets.json",
-        required = true
+        required = false
     )]
     oauth_config: String,
 
