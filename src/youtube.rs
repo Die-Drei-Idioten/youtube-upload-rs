@@ -256,7 +256,10 @@ impl YouTubeUploader {
     }
 }
 
-pub fn create_default_metadata(video_files: &[String], description_file: &str) -> Vec<VideoMetadata> {
+pub fn create_default_metadata(
+    video_files: &[String],
+    description_file: &str,
+) -> Vec<VideoMetadata> {
     let expanded_path = expand_tilde(description_file);
     video_files
         .iter()
