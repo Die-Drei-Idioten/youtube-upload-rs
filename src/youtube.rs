@@ -177,7 +177,7 @@ impl YouTubeUploader {
             .ok_or("No access token in response")?
             .to_string();
 
-        let expires_in = token_data["expires_in"].as_u64().unwrap_or(10800);
+        let expires_in = token_data["expires_in"].as_u64().unwrap_or(3600);
         let expires_at = Some(Utc::now() + Duration::seconds(expires_in as i64));
 
         Ok(StoredTokens {

@@ -83,6 +83,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Upload videos
     println!("\nUploading videos...");
     for (i, (video_file, video_metadata)) in video_files.iter().zip(metadata.iter()).enumerate() {
+		if (i+1) % 10 == 0 {
+        uploader.authenticate().await?;
+		}
         println!("Uploading {} ({}/{})", video_file, i + 1, video_files.len());
 
         match uploader.upload_video(video_file, video_metadata).await {
